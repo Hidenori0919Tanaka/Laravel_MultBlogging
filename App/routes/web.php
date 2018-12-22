@@ -23,3 +23,7 @@ Route::get('/blogs/{id}', 'BlogsController@show')->name('blogs.show');
 Route::get('/blogs/{id}/edit', 'BlogsController@edit')->name('blogs.edit');
 Route::delete('/blogs/{id}/delete', 'BlogsController@delete')->name('blogs.delete');
 Route::patch('/blogs/{id}/update', 'BlogsController@update')->name('blogs.update');
+
+Route::get('/admin', 'AdminController@index')->name('admin.index');
+
+Route::resource('categories', 'CategoryController');

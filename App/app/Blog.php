@@ -12,4 +12,8 @@ class Blog extends Model
     //
     // protected $table = 'my_blogs';
     protected $fillable = ['title', 'body'];
+    
+    public function category(){
+        return $this->belongsToMany(Category::class);
+    }
 }
