@@ -3,23 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Category;
 use App\Blog;
 
 class BlogsController extends Controller
 {
     //
         public function index(){
-            $blogs = Blog::all();
+            $blogs = Blog::latest()->get();
             return view('blogs.index', compact('blogs'));
         }
 
         public function create(){
-            return view('blogs.create');
+            $categories = Category::latest()->get();
+            return view('blogs.create', compact('categories'));
         }
 
         public function store(Request $request){
             $input = $request->all();
             $blog = Blog::create($input);
+            if($request->category_id){
+                $blog->category()->sync($request->category_id);
+            }
             // dd($request->body);
             // $blog = new Blog();
             // $blog->title = $request->title;
@@ -34,8 +39,16 @@ class BlogsController extends Controller
         }
 
         public function edit($id){
+            $categories = Category::latest()->get();
             $blog = Blog::findOrFail($id);
-            return view('blogs.edit', ['blog' => $blog]);
+
+            $bc = array();
+            foreach($blog->$category as $c){
+                $bc[] = $c->id - 1;
+            }
+            $filtered = array_expect($categories, $bc);
+
+            return view('blogs.edit', ['blog' => $blog, 'categories' => $categories, 'filtered'=>$filtered]);
         }
 
         public function update(Request $request, $id){
@@ -43,6 +56,9 @@ class BlogsController extends Controller
             $input = $request->all();
             $blog = Blog::findOrFail($id);
             $blog->update($input);
+            if($request->category_id){
+                $blog->category()->sync($request->category_id);
+            }
             return redirect('blogs');
         }
 
