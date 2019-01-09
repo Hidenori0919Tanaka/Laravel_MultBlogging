@@ -1,13 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
+@include('partials.tinymce')
+
     <div class="container-fluid">
         <div class="jumbotron">
             <h1>create a new blog</h1>
         </div>
 
         <div class="col-md-12">
-            <form action="{{ route('blogs.store') }}" method="post">
+            <form action="{{ route('blogs.store') }}" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="title">
                         <input type="text" name="title" class="form-control">
